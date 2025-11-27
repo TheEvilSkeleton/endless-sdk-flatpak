@@ -334,6 +334,9 @@
         },
         {
             "name": "eos-shard",
+            "build-options": {
+                "cflags": "-Wno-error=deprecated-declarations -Wno-error=discarded-qualifiers"
+            },
             "sources": [
                 {
                     "type": "git",
