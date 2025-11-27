@@ -515,17 +515,23 @@
         },
         {
             "name": "evince",
-            "config-opts": [ "--disable-nautilus", "--enable-introspection" ],
-            "cleanup": [ "/bin" ],
+            "buildsystem": "meson",
+            "config-opts": [
+                "-Dnautilus=false",
+                "-Dthumbnailer=false",
+                "-Dgtk_doc=false"
+            ],
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://download.gnome.org/sources/evince/3.28/evince-3.28.2.tar.xz",
-                    "sha256": "0955d22d85c9f6d322b6cbb464f1cc4c352db619017ec95dad4cc5c3440f73e1"
-                },
-                {
-                    "type": "patch",
-                    "path": "evince-EvView-fix-transformation-functions-to-document-coor.patch"
+                    "url": "https://download.gnome.org/sources/evince/48/evince-48.1.tar.xz",
+                    "sha256": "7d8b9a6fa3a05d3f5b9048859027688c73a788ff6e923bc3945126884943fa10",
+                    "git-init": true,
+                    "x-checker-data": {
+                        "is-important": true,
+                        "type": "gnome",
+                        "name": "evince"
+                    }
                 }
             ]
         },
