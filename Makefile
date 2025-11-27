@@ -8,10 +8,10 @@ REPO ?= repo
 SDK_BRANCH ?= master
 
 # The version of the Freedesktop runtime we build on
-FDO_RUNTIME_VERSION ?= 1.6
+FDO_RUNTIME_VERSION ?= 25.08
 
 # The version of the GNOME runtime we build on
-GNOME_RUNTIME_VERSION ?= 3.28
+GNOME_RUNTIME_VERSION ?= 49
 
 BUILD_TAG ?= $(shell date +%Y-%m-%d)
 
