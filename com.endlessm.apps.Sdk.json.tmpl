@@ -68,25 +68,16 @@
 
     "modules": [
         {
-            "name": "python-polib",
-            "no-autogen": true,
-            "ensure-writable": ["/lib/python*/site-packages/easy-install.pth"],
-            "cleanup-platform": ["*"],
-            "build-options": {
-                "env": {
-                    "PYTHON": "/usr/bin/python3"
-                }
-            },
+            "name": "python3-polib",
+            "buildsystem": "simple",
+            "build-commands": [
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"polib\" --no-build-isolation"
+            ],
             "sources": [
                 {
-                    "type": "archive",
-                    "url": "https://pypi.python.org/packages/fb/64/ad3dbcc052d92fedd535a80b9866a9334afaf136cb5d89a673ac36d16b5a/polib-1.0.8.tar.gz#md5=4e7c8a8e6851279ebb7c5813ca48d452",
-                    "sha256": "5affe3d915eb5b4773f4ce164817e383eea0306115cdaf9b64008b3aea8202df"
-                },
-                {
                     "type": "file",
-                    "path": "polib-makefile",
-                    "dest-filename": "Makefile"
+                    "url": "https://files.pythonhosted.org/packages/6b/99/45bb1f9926efe370c6dbe324741c749658e44cb060124f28dad201202274/polib-1.2.0-py2.py3-none-any.whl",
+                    "sha256": "1c77ee1b81feb31df9bca258cbc58db1bbb32d10214b173882452c73af06d62d"
                 }
             ]
         },
