@@ -537,30 +537,15 @@
         },
         {
             "name": "python3-lxml",
-            "no-autogen": true,
-            "cleanup-platform": ["*"],
-            "ensure-writable": ["/lib/python*/site-packages/easy-install.pth"],
-            "build-options": {
-                "cflags": "-I/usr/include",
-                "env": {
-                    "XSLT_CONFIG": "pkg-config libxslt",
-                    "XML2_CONFIG": "pkg-config libxml-2.0"
-                }
-            },
+            "buildsystem": "simple",
+            "build-commands": [
+                "pip3 install --verbose --exists-action=i --no-index --find-links=\"file://${PWD}\" --prefix=${FLATPAK_DEST} \"lxml\" --no-build-isolation"
+            ],
             "sources": [
                 {
-                    "type": "archive",
-                    "url": "https://pypi.python.org/packages/20/b3/9f245de14b7696e2d2a386c0b09032a2ff6625270761d6543827e667d8de/lxml-3.8.0.tar.gz",
-                    "sha256": "736f72be15caad8116891eb6aa4a078b590d231fdc63818c40c21624ac71db96"
-                },
-                {
                     "type": "file",
-                    "path": "setuptools-makefile",
-                    "dest-filename": "Makefile"
-                },
-                {
-                    "type": "patch",
-                    "path": "lxml-Fix-getting-lib-version-when-using-pkg-config.patch"
+                    "url": "https://files.pythonhosted.org/packages/aa/88/262177de60548e5a2bfc46ad28232c9e9cbde697bd94132aeb80364675cb/lxml-6.0.2.tar.gz",
+                    "sha256": "cd79f3367bd74b317dda655dc8fcfa304d9eb6e4fb06b7168c5cf27f96e0cd62"
                 }
             ]
         },
