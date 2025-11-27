@@ -399,31 +399,36 @@
             ]
         },
         {
-            "name": "appstream",
-            "builddir": true,
-            "buildsystem": "cmake",
-            "build-options": {
-                "config-opts": [
-                    "-DCMAKE_INSTALL_LIBDIR=/usr/lib",
-                    "-DQT=OFF",
-                    "-DAPT_SUPPORT=ON",
-                    "-DVAPI=OFF",
-                    "-DSTEMMING=OFF"
-                ]
-            },
+            "name": "libfyaml",
             "sources": [
                 {
                     "type": "archive",
-                    "url": "https://github.com/ximion/appstream/archive/APPSTREAM_0_10_4.tar.gz",
-                    "sha256": "0f506ef1146d2bc96c9215368de7e3248a110f4a8b90c6cc80cfe058e9abe33e"
-                },
+                    "url": "https://github.com/pantoniou/libfyaml/releases/download/v0.9/libfyaml-0.9.tar.gz",
+                    "sha256": "7731edc5dfcc345d5c5c9f6ce597133991a689dabede393cd77bae89b327cd6d",
+                    "x-checker-data": {
+                        "type": "anitya",
+                        "project-id": 383614,
+                        "stable-only": true,
+                        "url-template": "https://github.com/pantoniou/libfyaml/releases/download/v$version/libfyaml-$version.tar.gz"
+                    }
+                }
+            ]
+        },
+        {
+            "name": "appstream",
+            "buildsystem": "meson",
+            "config-opts": [
+                "-Dcompose=true",
+                "-Dstemming=false",
+                "-Dapidocs=false",
+                "-Dman=false"
+            ],
+            "sources": [
                 {
-                    "type": "patch",
-                    "path": "endless-appstream-cache.patch"
-                },
-                {
-                    "type": "patch",
-                    "path": "endless-appstream-no-docs.patch"
+                    "type": "git",
+                    "url": "https://github.com/ximion/appstream.git",
+                    "tag": "v1.1.1",
+                    "commit": "d6ce0a8dbdf31a33762009a0e1f364e938470af2"
                 }
             ]
         },
