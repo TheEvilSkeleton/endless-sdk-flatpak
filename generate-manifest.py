@@ -22,12 +22,6 @@ DEBIAN_TO_FLATPAK_ARCH_OVERRIDES = {
 FLATPAK_TO_DEBIAN_ARCH_OVERRIDES = \
     dict([(v, k) for k, v in DEBIAN_TO_FLATPAK_ARCH_OVERRIDES.items()])
 
-FREEDESKTOP_MANIFEST_URL = \
-    'https://raw.githubusercontent.com/flatpak/freedesktop-sdk-images/1.6/org.freedesktop.Sdk.json.in'
-
-GNOME_MANIFEST_URL = \
-    'https://gitlab.gnome.org/GNOME/gnome-sdk-images/raw/gnome-{version}/org.gnome.Sdk.json.in'
-
 def canonicalize_arch(arch, debian=False):
     """Transform arch names to the canonical names used by flatpak
 
@@ -37,162 +31,6 @@ def canonicalize_arch(arch, debian=False):
         return FLATPAK_TO_DEBIAN_ARCH_OVERRIDES.get(arch, arch)
     else:
         return DEBIAN_TO_FLATPAK_ARCH_OVERRIDES.get(arch, arch)
-
-def default_arch(debian=False):
-    """Get default flatpak architecture for host
-
-    If debian is True, it will be converted to debian format.
-    """
-    arch = Flatpak.get_default_arch()
-    if debian:
-        arch = canonicalize_arch(arch, debian=True)
-    return arch
-
-def edit_manifest(data, arch, branch, runtime_version):
-    """Edit manifest json data for architecture arch"""
-    arch = canonicalize_arch(arch)
-    supported_arches = Flatpak.get_supported_arches()
-    if arch not in supported_arches:
-        # Add a bind mount option for the qemu user static emulator for this
-        # architecture. The qemu arch names seem to match flatpak
-        build_opts = data.setdefault('build-options', {})
-        build_args = build_opts.setdefault('build-args', [])
-        opt = '--bind-mount=/run/qemu-{0}-static=/usr/bin/qemu-{0}-static'.format(arch)
-        build_args.append(opt)
-
-    data['branch'] = branch
-    data['runtime-version'] = runtime_version
-
-    # Docs extension
-    data['add-extensions']['org.gnome.Sdk.Docs']['version'] = runtime_version
-
-    # Finish args
-    finish_args = []
-    for arg in data['finish-args']:
-        finish_args.append(arg.replace('@@SDK_BRANCH@@', branch))
-    data['finish-args'] = finish_args
-
-    # Override the GTK package, as we have custom patches and build
-    # options
-    gtk_patches = {
-        'all': [
-            'gtk3-fix-atk-gjs-crash.patch',
-            'gtk3-CSS-eos-cairo-filter-property.patch',
-            'gtk3-x11-Don-t-set-NET_WM_PID-when-sandboxed.patch'
-        ],
-        'arm': [
-            'gtk3-egl-x11.patch',
-        ],
-        'x86_64': [
-        ],
-        'aarch64': [
-        ],
-    }
-
-    gtk_config_opts = {
-        'all': [
-        ],
-        'arm': [
-            '--enable-egl-x11',
-            '--build=arm-unknown-linux-gnueabi',
-        ],
-        'x86_64': [
-        ],
-        'aarch64': [
-            '--build=aarch64-unknown-linux-gnu',
-        ],
-    }
-
-    # Override the WebKitGtk+ package, as we have custom build options
-    webkitgtk_config_opts = {
-        'arm': [
-            '-DENABLE_GLES2=ON',
-        ],
-    }
-
-    gst_plugins_good_patches = {
-        'all': [
-            'gtkgstwidget-add-ready-to-show-signal.patch',
-            'gstgtkgl-Also-try-retrieving-an-EGL-context.patch',
-        ],
-        'arm': [
-        ],
-        'x86_64': [
-        ],
-        'aarch64': [
-        ],
-    }
-
-    gst_plugins_base_patches = {
-        'all': [
-            'gstgldisplay-Add-public-foreign_display-property.patch',
-        ],
-        'arm': [
-        ],
-        'x86_64': [
-        ],
-        'aarch64': [
-        ],
-    }
-
-    gst_plugins_base_config_opts = {
-        'arm': [
-            '--enable-gles2',
-            # glx includes OpenGL headers which conflict with the GLES2 headers
-            '--disable-glx',
-        ],
-        'x86_64': [
-        ],
-        'aarch64': [
-        ],
-    }
-
-    u = request.urlopen(FREEDESKTOP_MANIFEST_URL)
-    sdk_manifest = json.loads(re.sub(r'(^|\s)/\*.*?\*/', '', u.read().decode('utf-8'), flags=re.DOTALL))
-    for m in sdk_manifest['modules']:
-        if m['name'] == 'gtk3':
-            gtk_module = m
-            gtk_module['rm-configure'] = True
-            gtk_module['ensure-writable'] = ['/lib/gtk-3.0/3.0.0/immodules.cache']
-            for opt in (gtk_config_opts[arch] + gtk_config_opts['all']):
-                gtk_module['config-opts'].append(opt)
-            for patch in (gtk_patches[arch] + gtk_patches['all']):
-                gtk_module['sources'].append({ 'type': 'patch', 'path': patch })
-            data['modules'].insert(0, gtk_module)
-            break
-    version = runtime_version.replace('.', '-')
-    u = request.urlopen(GNOME_MANIFEST_URL.format(version=version))
-    sdk_manifest = json.loads(re.sub(r'(^|\s)/\*.*?\*/', '', u.read().decode('utf-8'), flags=re.DOTALL))
-    for m in sdk_manifest['modules']:
-        if m['name'] == 'gstreamer-plugins-base':
-            gst_plugins_base_module = m
-            for opt in gst_plugins_base_config_opts[arch]:
-                gst_plugins_base_module['config-opts'].append(opt)
-            for patch in (gst_plugins_base_patches[arch] + gst_plugins_base_patches['all']):
-                gst_plugins_base_module['sources'].append({ 'type': 'patch', 'path': patch })
-            data['modules'].insert(0, gst_plugins_base_module)
-            break
-    for m in sdk_manifest['modules']:
-        if m['name'] == 'gstreamer-plugins-good':
-            gst_module = m
-            for patch in (gst_plugins_good_patches[arch] + gst_plugins_good_patches['all']):
-                gst_module['sources'].append({ 'type': 'patch', 'path': patch })
-            data['modules'].insert(0, gst_module)
-            break
-    # GNOME SDK's WebkitGTK+ module is only needed for our arm SDK
-    if arch not in ['arm']:
-        return
-    for m in sdk_manifest['modules']:
-        if m['name'] == 'WebKitGTK+':
-            webkitgtk_module = m
-            for arch in webkitgtk_config_opts:
-                webkitgtk_module.setdefault('build-options', {}) \
-                                .setdefault('arch', {}) \
-                                .setdefault(arch, {}) \
-                                .setdefault('config-opts', []) \
-                                .extend(webkitgtk_config_opts[arch])
-            data['modules'].insert(1, webkitgtk_module)
-            break
 
 def sha256(filename):
     checksum = hashlib.sha256()
@@ -243,6 +81,5 @@ aparser.add_argument('infile', metavar='FILE', nargs='?',
 args = aparser.parse_args()
 
 data = json.load(args.infile)
-edit_manifest(data, args.arch, args.branch, args.runtime_version)
 add_fonts_module(data)
 print(json.dumps(data, indent=4))
