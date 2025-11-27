@@ -345,14 +345,24 @@
                 }
             ]
         },
+        "shared-modules/libsoup/libsoup-2.4.json",
         {
             "name": "libdmodel",
             "buildsystem": "meson",
+            "build-options": {
+                "config-opts": [
+                    "-Dwarning_level=0"
+                ]
+            },
             "sources": [
                 {
                     "type": "git",
                     "url": "https://github.com/endlessm/libdmodel.git",
-                    "branch": "sdk-6"
+                    "branch": "sdk-5"
+                },
+                {
+                    "type": "patch",
+                    "path": "libdmodel-dont-error-at-warning.patch"
                 }
             ]
         },

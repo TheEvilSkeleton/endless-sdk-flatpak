@@ -1,0 +1,13 @@
+diff --git a/dmodel/meson.build b/dmodel/meson.build
+index 27f53b3..289b146 100644
+--- a/dmodel/meson.build
++++ b/dmodel/meson.build
+@@ -77,7 +77,7 @@ main_library = library('@0@-@1@'.format(meson.project_name(), api_version),
+ 
+ introspection_sources = [sources, enum_sources, installed_headers]
+ 
+-gnome.generate_gir(main_library, extra_args: ['--warn-all', '--warn-error'],
++gnome.generate_gir(main_library, extra_args: ['--warn-all'],
+     identifier_prefix: 'Dm', include_directories: include,
+     includes: ['EosShard-0', 'Gio-2.0', 'GLib-2.0', 'GObject-2.0', 'Json-1.0',
+         'Soup-2.4', 'Xapian-2.0'],
