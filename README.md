@@ -9,8 +9,8 @@ modules for the Endless platform.
 
 ### Building the run times
 
-In order to build the run times, you will need `flatpak-builder` and the
-following run times:
+In order to build the run times, you will need `flatpak-builder`
+(`org.flatpak.Builder` on Flathub) and the following run times:
 
  * org.freedesktop.Sdk
  * org.freedesktop.Platform

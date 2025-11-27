@@ -67,8 +67,8 @@ ICONTHEME_DEPS = \
 	    $< > $@.tmp && mv $@.tmp $@
 
 define build-manifest
-	@flatpak-builder --version
-	flatpak-builder \
+	@flatpak run org.flatpak.Builder --version
+	flatpak run org.flatpak.Builder \
 		--force-clean --ccache --require-changes \
 		--repo=${REPO} \
 		--arch=${ARCH} \
