@@ -1,0 +1,21 @@
+diff --git a/src/meson.build b/src/meson.build
+index 5f594e4..fae6610 100644
+--- a/src/meson.build
++++ b/src/meson.build
+@@ -31,7 +31,7 @@ configure_file(
+ )
+ 
+ maxwell_deps = [
+-  dependency('webkit2gtk-4.0', version: '>= 2.18'),
++  dependency('webkit2gtk-4.1', version: '>= 2.18'),
+ ]
+ 
+ gnome = import('gnome')
+@@ -81,6 +81,6 @@ gnome.generate_gir(maxwell_lib,
+                    identifier_prefix: 'Maxwell',
+                    symbol_prefix: 'maxwell',
+                    export_packages: 'maxwell-' + api_version,
+-                   includes: [ 'WebKit2-4.0' ],
++                   includes: [ 'WebKit2-4.1' ],
+                    install: true,
+                    extra_args: gir_extra_args)
