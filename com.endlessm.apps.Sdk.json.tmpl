@@ -584,11 +584,17 @@
         },
         {
             "name": "mustache-c",
+            "config-opts": [
+                "--disable-helpers"
+            ],
+            "build-options": {
+                "cflags": "-Wno-error=implicit-function-declaration"
+            },
             "sources": [
                 {
                     "type": "git",
                     "url": "https://github.com/x86-64/mustache-c.git",
-                    "commit": "01f1e4732c4862071bbf07242128abf1e28cc105"
+                    "commit": "7fe52392879d0188c172d94bb4fde7c513d6b929"
                 }
             ]
         },
