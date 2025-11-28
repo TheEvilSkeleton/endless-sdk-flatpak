@@ -614,35 +614,6 @@
             ]
         },
         {
-            "name": "eos-knowledge-lib",
-            "cleanup-platform": [
-                "*.po",
-                "*.scss",
-                "/bin/autobahn",
-                "/bin/eminem",
-                "/bin/introspect",
-                "/bin/kermit",
-                "/bin/picard"
-            ],
-            "build-options": {
-                "config-opts": [
-                    "--disable-js-doc",
-                    "--disable-documentation",
-                    "--with-mathjax-dir=/usr/share/javascript/mathjax"
-                ],
-                "env": {
-                    "HOTDOC": "/usr/bin/python3 /usr/bin/hotdoc"
-                }
-            },
-            "sources": [
-                {
-                    "type": "git",
-                    "url": "https://github.com/endlessm/eos-knowledge-lib.git",
-                    "branch": "sdk-6"
-                }
-            ]
-        },
-        {
             "name": "os-release",
             "sources": [
                 {
