@@ -72,6 +72,7 @@ define build-manifest
 		--force-clean --ccache --require-changes \
 		--repo=${REPO} \
 		--arch=${ARCH} \
+		--disable-rofiles-fuse \
 		--subject="Build of $1, `date`" \
 		${EXPORT_ARGS} \
 		builddir \
