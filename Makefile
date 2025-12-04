@@ -52,11 +52,6 @@ GOOGLE_FONTS = \
 	Roboto \
 	$()
 
-ICONTHEME_DEPS = \
-	org.freedesktop.Platform.Icontheme.EndlessOS.json \
-	org.freedesktop.Platform.Icontheme.EndlessOS.appdata.xml \
-	$()
-
 # Generic substitution rule
 %: %.in
 	@echo "  GEN   $@" &&                                            \
@@ -79,13 +74,10 @@ define build-manifest
 		$1
 endef
 
-all: sdk icontheme
+all: sdk
 
 sdk: ${REPO} $(SDK_DEPS)
 	$(call build-manifest,com.endlessm.apps.Sdk.json)
-
-icontheme: ${REPO} $(ICONTHEME_DEPS)
-	$(call build-manifest,org.freedesktop.Platform.Icontheme.EndlessOS.json)
 
 ${REPO}:
 	ostree init --mode=archive-z2 --repo=${REPO}
@@ -147,4 +139,4 @@ update-fonts:
 		wget https://fonts.google.com/download?family=$$font -O fonts/$$font.zip; \
 	done
 
-.PHONY: sdk icontheme add-repo install-dependencies clean-dependencies maintainer-clean bundle-artefacts
+.PHONY: sdk add-repo install-dependencies clean-dependencies maintainer-clean bundle-artefacts
