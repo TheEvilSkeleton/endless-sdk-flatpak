@@ -1,0 +1,19 @@
+diff --git a/meson.build b/meson.build
+index c8de6b4..fc68af1 100644
+--- a/meson.build
++++ b/meson.build
+@@ -52,9 +52,11 @@ if host_machine.system() == 'freebsd'
+ endif
+ 
+ if get_option('with_xapian')
+-    xapian_dep = dependency('xapian-core', version: '>=1.4.12', static:static_linkage)
+-else
+-    xapian_dep = dependency('', required:false)
++    xapian_dep = dependency('xapian-core', version: '>=1.4.12', static:static_linkage, required: false)
++    if not xapian_dep.found()
++        # Xapian 1.5 has a versioned xapian-core pkg-config file
++        xapian_dep = dependency('xapian-core-1.5', static: static_linkage)
++    endif
+ endif
+ private_conf.set('ENABLE_XAPIAN', xapian_dep.found())
+ public_conf.set('LIBZIM_WITH_XAPIAN', xapian_dep.found())
